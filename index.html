@@ -288,48 +288,20 @@
         }
         .tag i { font-size: 10px; }
 
-        /* Launch form (main CTA on step 5) */
-        .launch-form {
-            margin-top: 18px;
-            padding: 14px;
-            background: #e8eeff;
-            border: 1px solid #d1ddff;
-            border-radius: 12px;
+        /* Rocket badge (step 6) */
+        .rocket-badge {
+            animation: rocket-fly 2.4s ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        /* Standalone launch form on step 6 */
+        .launch-form-big {
+            margin-top: 4px;
             text-align: left;
-        }
-        .launch-heading {
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
-            margin-bottom: 10px;
-        }
-        .launch-icon {
-            flex-shrink: 0;
-            width: 28px;
-            height: 28px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: #3362d3;
-            color: white;
-            border-radius: 8px;
-            font-size: 13px;
-        }
-        .launch-copy h4 {
-            font-size: 13.5px;
-            font-weight: 700;
-            color: #111827;
-            letter-spacing: -0.2px;
-            margin-bottom: 2px;
-        }
-        .launch-copy p {
-            font-size: 11.5px;
-            line-height: 1.45;
-            color: #4b5563;
         }
         .launch-row {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
         .launch-input-wrap {
             position: relative;
@@ -339,19 +311,19 @@
         }
         .launch-input-wrap > i {
             position: absolute;
-            left: 12px;
+            left: 16px;
             color: #6b7280;
-            font-size: 12px;
+            font-size: 14px;
             pointer-events: none;
         }
         .launch-input-wrap input {
             width: 100%;
-            padding: 10px 12px 10px 32px;
+            padding: 14px 16px 14px 42px;
             border: 1px solid #e5e7eb;
-            border-radius: 8px;
+            border-radius: 12px;
             background: #ffffff;
             font-family: inherit;
-            font-size: 12.5px;
+            font-size: 15px;
             color: #1f2937;
             transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
@@ -360,12 +332,7 @@
             border-color: #3362d3;
             box-shadow: 0 0 0 3px rgba(51, 98, 211, 0.18);
         }
-        .launch-btn {
-            padding: 10px 16px;
-            font-size: 13px;
-            border-radius: 8px;
-            flex-shrink: 0;
-        }
+        .launch-btn-big { flex-shrink: 0; }
 
         /* ---------- Buttons ---------- */
         .cta,
@@ -442,6 +409,54 @@
         }
         .studio-link:hover { color: #3362d3; }
         .studio-link i     { font-size: 10px; opacity: 0.8; }
+
+        /* How-to-hide hint on the done state */
+        .dismiss-hint {
+            display: inline-flex;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 18px;
+            padding: 8px 14px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 999px;
+            font-size: 12.5px;
+            color: #4b5563;
+            max-width: 92%;
+        }
+        .dismiss-hint > i.fa-lightbulb { color: #f3bf59; font-size: 12px; }
+        .step-seq {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .seq-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #1f2937;
+            font-size: 11px;
+        }
+        .seq-sep {
+            color: #9ca3af;
+            font-size: 9px;
+        }
+        .seq-label {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 2px 8px;
+            color: #111827;
+            font-weight: 600;
+            font-size: 11.5px;
+        }
 
         /* ---------- Callouts (steps 1-4) ---------- */
         .callout {
@@ -800,12 +815,6 @@
                 color: #a3bbff;
             }
 
-            .launch-form {
-                background: #162348;
-                border-color: #263a6e;
-            }
-            .launch-icon            { background: #4671d7; }
-            .launch-copy h4         { color: #f8fafc; }
             .launch-input-wrap input {
                 background: #0f172a;
                 border-color: #334155;
@@ -816,6 +825,19 @@
                 border-color: #7599ff;
                 box-shadow: 0 0 0 3px rgba(117, 153, 255, 0.25);
             }
+
+            .dismiss-hint {
+                background: #1e293b;
+                border-color: #334155;
+                color: #cbd5e1;
+            }
+            .seq-icon,
+            .seq-label {
+                background: #0f172a;
+                border-color: #334155;
+                color: #f8fafc;
+            }
+            .seq-sep { color: #64748b; }
         }
     </style>
 </head>
@@ -945,27 +967,29 @@
                     <span class="tag"><i class="fa-solid fa-handshake"></i> Sales demos</span>
                     <span class="tag"><i class="fa-solid fa-user-shield"></i> Secure onboarding</span>
                 </div>
-
-                <form class="launch-form" id="launchForm">
-                    <div class="launch-heading">
-                        <div class="launch-icon"><i class="fa-solid fa-rocket"></i></div>
-                        <div class="launch-copy">
-                            <h4>Ready to take it for a spin?</h4>
-                            <p>Drop in a URL and we'll open it right here in your space &mdash; your team follows along instantly.</p>
-                        </div>
-                    </div>
-                    <div class="launch-row">
-                        <div class="launch-input-wrap">
-                            <i class="fa-solid fa-globe"></i>
-                            <input type="url" id="launchUrl" value="https://wikipedia.org" placeholder="https://example.com" required>
-                        </div>
-                        <button type="submit" class="btn-primary launch-btn">
-                            Let's go
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                    </div>
-                </form>
             </div>
+        </div>
+
+        <!-- Step 6: Launch — take it for a spin -->
+        <div class="welcome-card" data-step="6">
+            <div class="wave-badge rocket-badge">
+                <i class="fa-solid fa-rocket"></i>
+            </div>
+            <h1>Ready to <span class="accent">take it for a spin?</span></h1>
+            <p>Drop in any URL and we'll open it right here in your space &mdash; your team follows along instantly.</p>
+
+            <form class="launch-form-big" id="launchForm">
+                <div class="launch-row">
+                    <div class="launch-input-wrap">
+                        <i class="fa-solid fa-globe"></i>
+                        <input type="url" id="launchUrl" value="https://wikipedia.org" placeholder="https://example.com" required>
+                    </div>
+                    <button type="submit" class="cta launch-btn-big">
+                        Let's go
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -975,7 +999,7 @@
         <div class="divider"></div>
         <div class="step-counter">
             <span class="current" id="stepCurrent">1</span>
-            <span>/ 5</span>
+            <span>/ 6</span>
         </div>
         <div class="dots" id="dots">
             <button class="dot" data-goto="1" type="button" aria-label="Step 1"></button>
@@ -983,6 +1007,7 @@
             <button class="dot" data-goto="3" type="button" aria-label="Step 3"></button>
             <button class="dot" data-goto="4" type="button" aria-label="Step 4"></button>
             <button class="dot" data-goto="5" type="button" aria-label="Step 5"></button>
+            <button class="dot" data-goto="6" type="button" aria-label="Step 6"></button>
         </div>
         <div class="divider"></div>
         <div class="nav-buttons">
@@ -1010,10 +1035,22 @@
             or go back to Studio
             <i class="fa-solid fa-arrow-up-right-from-square"></i>
         </a>
+
+        <div class="dismiss-hint">
+            <i class="fa-solid fa-lightbulb"></i>
+            <span>To hide this page next time, head to</span>
+            <span class="step-seq">
+                <span class="seq-icon" title="Settings"><i class="fa-solid fa-gear"></i></span>
+                <i class="fa-solid fa-chevron-right seq-sep"></i>
+                <span class="seq-icon" title="Toggles"><i class="fa-solid fa-toggle-on"></i></span>
+                <i class="fa-solid fa-chevron-right seq-sep"></i>
+                <span class="seq-label">Start page</span>
+            </span>
+        </div>
     </div>
 
     <script>
-        const TOTAL_STEPS = 5;
+        const TOTAL_STEPS = 6;
 
         const steps       = document.querySelectorAll('[data-step]');
         const tourNav     = document.getElementById('tourNav');
