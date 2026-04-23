@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to your meeting space</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f9fafb;
+            color: #1f2937;
+        }
+
+        /* Floating soft orbs in background */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.25;
+            pointer-events: none;
+            animation: float 22s infinite ease-in-out;
+        }
+        .orb-1 { width: 380px; height: 380px; background: #e8eeff; top: -120px; left: -80px; }
+        .orb-2 { width: 300px; height: 300px; background: #d1ddff; bottom: -100px; right: -80px; animation-delay: -7s; }
+        .orb-3 { width: 220px; height: 220px; background: #e8eeff; top: 60%; left: 55%; animation-delay: -14s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33%      { transform: translate(40px, -30px) scale(1.08); }
+            66%      { transform: translate(-30px, 40px) scale(0.94); }
+        }
+
+        .stage {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        /* ---------- Step visibility ---------- */
+        /* Any element with data-step is a tour step; hidden by default */
+        [data-step] {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.35s ease, visibility 0s linear 0.35s, transform 0.35s ease;
+        }
+        [data-step].active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transition: opacity 0.35s ease, visibility 0s, transform 0.35s ease;
+        }
+
+        /* ---------- Center welcome card (step 0) ---------- */
+        .welcome-card {
+            position: relative;
+            z-index: 10;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 48px 56px;
+            text-align: center;
+            max-width: 520px;
+            border: 1px solid #e8e8e9;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+        .welcome-card.active {
+            animation: pop-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes pop-in {
+            from { opacity: 0; transform: scale(0.9) translateY(12px); }
+            to   { opacity: 1; transform: scale(1)   translateY(0); }
+        }
+
+        .wave-badge {
+            display: inline-flex;
+            width: 88px;
+            height: 88px;
+            align-items: center;
+            justify-content: center;
+            background: #e8eeff;
+            border-radius: 50%;
+            margin-bottom: 24px;
+            transform-origin: 70% 70%;
+            animation: wave 2.4s ease-in-out infinite;
+        }
+        .wave-badge i {
+            font-size: 38px;
+            color: #3362d3;
+        }
+        @keyframes wave {
+            0%, 60%, 100% { transform: rotate(0deg); }
+            10%           { transform: rotate(-14deg); }
+            20%           { transform: rotate(12deg); }
+            30%           { transform: rotate(-10deg); }
+            40%           { transform: rotate(8deg); }
+            50%           { transform: rotate(0deg); }
+        }
+
+        .welcome-card h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            color: #111827;
+            margin-bottom: 12px;
+            line-height: 1.15;
+        }
+        .welcome-card h1 .accent { color: #3362d3; }
+        .welcome-card p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #4b5563;
+            margin-bottom: 20px;
+        }
+        .welcome-card p.subtext {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 28px;
+        }
+
+        /* Permanent URL pill */
+        .url-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 18px;
+            text-align: left;
+        }
+        .url-pill > i.fa-link {
+            color: #3362d3;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .url-pill .url-text {
+            flex: 1;
+            font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 13px;
+            color: #1f2937;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .copy-btn {
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: background 0.15s ease, color 0.15s ease;
+            flex-shrink: 0;
+        }
+        .copy-btn:hover    { background: #e5e7eb; color: #1f2937; }
+        .copy-btn.copied   { color: #3362d3; background: #e8eeff; }
+
+        /* ---------- Step 5: "Make it your own" info card ---------- */
+        .info-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 28px 30px;
+            max-width: 460px;
+            border: 1px solid #e8e8e9;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+            text-align: center;
+        }
+        .info-badge {
+            display: inline-flex;
+            width: 56px;
+            height: 56px;
+            align-items: center;
+            justify-content: center;
+            background: #e8eeff;
+            color: #3362d3;
+            border-radius: 50%;
+            margin-bottom: 14px;
+            font-size: 22px;
+        }
+        .info-card h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #111827;
+            letter-spacing: -0.4px;
+            margin-bottom: 6px;
+        }
+        .info-card > p {
+            font-size: 14px;
+            line-height: 1.55;
+            color: #4b5563;
+            margin-bottom: 18px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 18px;
+            text-align: left;
+        }
+        .feature {
+            background: #f9fafb;
+            border: 1px solid #eff1f5;
+            border-radius: 10px;
+            padding: 12px 10px;
+            transition: border-color 0.15s ease, background 0.15s ease;
+        }
+        .feature:hover {
+            border-color: #d1ddff;
+            background: #ffffff;
+        }
+        .feature i {
+            color: #3362d3;
+            font-size: 15px;
+            margin-bottom: 6px;
+            display: inline-block;
+        }
+        .feature h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 3px;
+            letter-spacing: -0.2px;
+        }
+        .feature p {
+            font-size: 11.5px;
+            line-height: 1.45;
+            color: #4b5563;
+        }
+
+        .examples-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e8eeff;
+            color: #2952b8;
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 12.5px;
+            font-weight: 600;
+        }
+        .tag i { font-size: 10px; }
+
+        /* ---------- Buttons ---------- */
+        .cta,
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #3362d3;
+            color: white;
+            padding: 13px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+        .cta:hover,
+        .btn-primary:hover    { background: #2952b8; }
+        .cta:active,
+        .btn-primary:active   { transform: translateY(1px); }
+        .cta i,
+        .btn-primary i        { font-size: 13px; transition: transform 0.2s ease; }
+        .cta:hover i,
+        .btn-primary:hover i  { transform: translateX(3px); }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #ffffff;
+            color: #1f2937;
+            padding: 11px 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease, color 0.15s ease;
+        }
+        .btn-secondary:hover   { background: #f9fafb; border-color: #d1ddff; }
+        .btn-secondary:active  { transform: translateY(1px); }
+        .btn-secondary:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            padding: 8px 4px;
+            transition: color 0.15s ease;
+        }
+        .btn-link:hover { color: #111827; }
+
+        .studio-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: -4px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #4b5563;
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+        .studio-link:hover { color: #3362d3; }
+        .studio-link i     { font-size: 10px; opacity: 0.8; }
+
+        /* ---------- Callouts (steps 1-4) ---------- */
+        .callout {
+            position: absolute;
+            z-index: 6;
+            display: flex;
+            gap: 10px;
+        }
+        .callout.active {
+            animation: callout-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .callout .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 14px 18px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+            max-width: 260px;
+            border: 1px solid #e8e8e9;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .callout .card h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: -0.2px;
+        }
+        .callout .card h3 i {
+            color: #3362d3;
+            font-size: 15px;
+        }
+        .callout .card p {
+            font-size: 12.5px;
+            line-height: 1.5;
+            color: #4b5563;
+        }
+
+        /* Hand-drawn SVG arrows */
+        .arrow-svg {
+            width: 180px;
+            height: 150px;
+            filter: url(#sketch);
+            animation: nudge 2.8s ease-in-out infinite;
+        }
+        .arrow-svg path,
+        .arrow-svg polygon {
+            stroke: #3362d3;
+            fill: none;
+            stroke-width: 3.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .arrow-svg polygon { fill: #3362d3; }
+
+        /* Draw-in animation so arrows feel sketched on screen */
+        .arrow-svg path {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+        }
+        .arrow-svg polygon {
+            opacity: 0;
+            transform-origin: center;
+        }
+        .callout.active .arrow-svg path {
+            animation: draw-line 0.95s cubic-bezier(0.65, 0.05, 0.36, 1) 0.1s forwards;
+        }
+        .callout.active .arrow-svg polygon {
+            animation: tip-in 0.3s ease-out 1s forwards;
+        }
+
+        @keyframes draw-line {
+            to { stroke-dashoffset: 0; }
+        }
+        @keyframes tip-in {
+            from { opacity: 0; transform: scale(0.4) rotate(-10deg); }
+            to   { opacity: 1; transform: scale(1)   rotate(0deg); }
+        }
+
+        /* Callout positioning */
+        .callout-tl { top: 32px; left: 32px;  flex-direction: column; align-items: flex-start; }
+        .callout-tr { top: 32px; right: 32px; flex-direction: column; align-items: flex-end; }
+        /* Tabs callout — arrow tip lands ~100px from the top-left corner */
+        .callout-tc {
+            top: 24px;
+            left: 90px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        /* Video & Chat sits slightly left of the very top-right corner */
+        .callout-tr.tr-offset { right: 180px; }
+
+        /* Direction-specific nudge animations */
+        .callout-tl .arrow-svg,
+        .callout-tc .arrow-svg { animation-name: nudge-tl; }
+        .callout-tr .arrow-svg { animation-name: nudge-tr; }
+        .callout[data-step="5"] .arrow-svg { animation-name: nudge-top; }
+
+        @keyframes nudge-tl {
+            0%, 100% { transform: translate(0, 0); }
+            50%      { transform: translate(-8px, -8px); }
+        }
+        @keyframes nudge-tr {
+            0%, 100% { transform: translate(0, 0); }
+            50%      { transform: translate(8px, -8px); }
+        }
+        @keyframes nudge-top {
+            0%, 100% { transform: translate(0, 0); }
+            50%      { transform: translate(0, -10px); }
+        }
+
+        @keyframes callout-in {
+            from { opacity: 0; transform: scale(0.9); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        /* ---------- Tour navigation bar ---------- */
+        .tour-nav {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #ffffff;
+            border: 1px solid #e8e8e9;
+            border-radius: 14px;
+            padding: 12px 16px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+            z-index: 20;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0s linear 0.3s, transform 0.3s ease;
+        }
+        .tour-nav.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+            transition: opacity 0.3s ease, visibility 0s, transform 0.3s ease;
+            animation: nav-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes nav-in {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .tour-nav .divider {
+            width: 1px;
+            height: 22px;
+            background: #e5e7eb;
+        }
+
+        .step-counter {
+            font-size: 13px;
+            font-weight: 600;
+            color: #4b5563;
+            min-width: 56px;
+            text-align: center;
+            letter-spacing: 0.2px;
+        }
+        .step-counter .current { color: #3362d3; }
+
+        .dots {
+            display: flex;
+            gap: 6px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            cursor: pointer;
+            border: none;
+            padding: 0;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .dot:hover    { background: #d1ddff; }
+        .dot.active   { background: #3362d3; transform: scale(1.25); }
+        .dot.visited  { background: #7599ff; }
+
+        .nav-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* ---------- Done state ---------- */
+        .done-state {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            color: #111827;
+            text-align: center;
+            padding: 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+        }
+        .done-state.visible {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.4s ease, visibility 0s;
+            animation: pop-in 0.5s ease-out;
+        }
+        .done-state .rocket {
+            width: 80px;
+            height: 80px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #e8eeff;
+            color: #3362d3;
+            border-radius: 50%;
+            font-size: 34px;
+            animation: rocket-fly 2s ease-in-out infinite;
+        }
+        @keyframes rocket-fly {
+            0%, 100% { transform: translateY(0) rotate(-10deg); }
+            50%      { transform: translateY(-8px) rotate(-18deg); }
+        }
+        .done-state h2 {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+            color: #111827;
+        }
+        .done-state p {
+            font-size: 15px;
+            color: #4b5563;
+            max-width: 420px;
+            line-height: 1.6;
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 900px) {
+            .callout .card { max-width: 200px; padding: 12px 14px; }
+            .callout .card h3 { font-size: 13px; }
+            .callout .card p  { font-size: 11.5px; }
+            .arrow-svg        { width: 120px; height: 100px; }
+            .welcome-card     { padding: 36px 32px; max-width: 90%; }
+            .welcome-card h1  { font-size: 26px; }
+            .info-card        { padding: 32px 28px; max-width: 92%; }
+            .info-card h2     { font-size: 22px; }
+            .feature-grid     { grid-template-columns: 1fr; }
+            .tour-nav         { gap: 12px; padding: 10px 12px; }
+        }
+        @media (max-width: 560px) {
+            .callout .card        { max-width: 180px; }
+            .welcome-card         { padding: 32px 24px; }
+            .info-card            { padding: 28px 20px; }
+            .tour-nav .btn-link   { display: none; }
+            .tour-nav .divider    { display: none; }
+            .step-counter         { min-width: 44px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG filter for hand-drawn arrow effect -->
+    <svg width="0" height="0" style="position:absolute; left:-9999px" aria-hidden="true">
+        <defs>
+            <filter id="sketch" x="-5%" y="-5%" width="110%" height="110%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="2" seed="4" result="noise"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2"/>
+            </filter>
+        </defs>
+    </svg>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="stage">
+        <!-- Step 0: Welcome card -->
+        <div class="welcome-card" data-step="0">
+            <div class="wave-badge">
+                <i class="fa-solid fa-hand"></i>
+            </div>
+            <h1>Hi <span class="accent">Ashish</span>, welcome to your meeting space</h1>
+            <p>This is your personal URL &mdash; it's yours forever. Share it any time to chat, co-browse, or augment the web with your team.</p>
+
+            <div class="url-pill">
+                <i class="fa-solid fa-link"></i>
+                <span class="url-text" id="meetingUrl">https://webfu.se/+ashish-meeting-onboarding</span>
+                <button class="copy-btn" id="copyBtn" type="button" title="Copy link">
+                    <i class="fa-solid fa-copy"></i>
+                    <span id="copyLabel">Copy</span>
+                </button>
+            </div>
+
+            <p class="subtext">Let's take a quick tour so you know your way around.</p>
+
+            <button class="cta" id="startBtn" type="button">
+                Start the tour
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- Step 1: Participants (top-left) -->
+        <div class="callout callout-tl" data-step="1">
+            <svg class="arrow-svg" viewBox="0 0 180 150">
+                <path pathLength="100" d="M 165 138 C 148 128, 138 118, 128 108 C 112 92, 98 76, 84 60 C 68 44, 54 30, 38 20 C 26 13, 18 10, 12 8"/>
+                <polygon points="12,8 32,10 20,28"/>
+            </svg>
+            <div class="card">
+                <h3><i class="fa-solid fa-users"></i> Participants</h3>
+                <p>See who's in your meeting and invite teammates or guests with a quick link.</p>
+            </div>
+        </div>
+
+        <!-- Step 2: Tabs (arrow points up-left to ~100px from the top-left corner) -->
+        <div class="callout callout-tc" data-step="2">
+            <svg class="arrow-svg" viewBox="0 0 180 150">
+                <path pathLength="100" d="M 165 138 C 148 128, 138 118, 128 108 C 112 92, 98 76, 84 60 C 68 44, 54 30, 38 20 C 26 13, 18 10, 12 8"/>
+                <polygon points="12,8 32,10 20,28"/>
+            </svg>
+            <div class="card">
+                <h3><i class="fa-solid fa-plus"></i> Tabs</h3>
+                <p>Click the <b>+</b> to open a new tab, or click an existing tab to edit its URL.</p>
+            </div>
+        </div>
+
+        <!-- Step 3: Video & Chat (slightly left of the top-right corner) -->
+        <div class="callout callout-tr tr-offset" data-step="3">
+            <svg class="arrow-svg" viewBox="0 0 180 150">
+                <path pathLength="100" d="M 15 138 C 32 128, 42 118, 52 108 C 68 92, 82 76, 96 60 C 112 44, 126 30, 142 20 C 154 13, 162 10, 168 8"/>
+                <polygon points="168,8 148,10 160,28"/>
+            </svg>
+            <div class="card">
+                <h3><i class="fa-solid fa-video"></i> Video &amp; Chat</h3>
+                <p>Start a video call, turn on your mic, or send a message to the room.</p>
+            </div>
+        </div>
+
+        <!-- Step 4: Settings & Exit (top-right corner) -->
+        <div class="callout callout-tr" data-step="4">
+            <svg class="arrow-svg" viewBox="0 0 180 150">
+                <path pathLength="100" d="M 15 138 C 32 128, 42 118, 52 108 C 68 92, 82 76, 96 60 C 112 44, 126 30, 142 20 C 154 13, 162 10, 168 8"/>
+                <polygon points="168,8 148,10 160,28"/>
+            </svg>
+            <div class="card">
+                <h3><i class="fa-solid fa-gear"></i> Settings &amp; Exit</h3>
+                <p>Tweak audio, camera, and display preferences, or leave when you're done.</p>
+            </div>
+        </div>
+
+        <!-- Step 5: Make it your own — slightly left of top-right corner, arrow points straight up -->
+        <div class="callout callout-tr tr-offset" data-step="5">
+            <svg class="arrow-svg" viewBox="0 0 180 150">
+                <path pathLength="100" d="M 140 138 C 136 110, 148 82, 138 52 C 132 34, 144 20, 140 10"/>
+                <polygon points="140,8 126,28 154,28"/>
+            </svg>
+            <div class="info-card">
+                <div class="info-badge"><i class="fa-solid fa-puzzle-piece"></i></div>
+                <h2>Make it your own</h2>
+                <p>Your meeting space is fully customizable. Tune the settings, plug in extensions, and add apps to fit the way your team works.</p>
+
+                <div class="feature-grid">
+                    <div class="feature">
+                        <i class="fa-solid fa-sliders"></i>
+                        <h4>Space settings</h4>
+                        <p>Control who can join, share, record, and edit URLs.</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <h4>Extensions</h4>
+                        <p>Filter content, block trackers, or inject your own logic into every page.</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fa-solid fa-puzzle-piece"></i>
+                        <h4>Apps</h4>
+                        <p>Drop in tools like file sharing, polls, forms, or call recording.</p>
+                    </div>
+                </div>
+
+                <div class="examples-label">Great for</div>
+                <div class="examples">
+                    <span class="tag"><i class="fa-solid fa-headset"></i> Customer support</span>
+                    <span class="tag"><i class="fa-solid fa-cart-shopping"></i> Co-shopping</span>
+                    <span class="tag"><i class="fa-solid fa-graduation-cap"></i> Training</span>
+                    <span class="tag"><i class="fa-solid fa-handshake"></i> Sales demos</span>
+                    <span class="tag"><i class="fa-solid fa-user-shield"></i> Secure onboarding</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tour navigation bar -->
+    <div class="tour-nav" id="tourNav">
+        <button class="btn-link" id="skipBtn" type="button">Skip tour</button>
+        <div class="divider"></div>
+        <div class="step-counter">
+            <span class="current" id="stepCurrent">1</span>
+            <span>/ 5</span>
+        </div>
+        <div class="dots" id="dots">
+            <button class="dot" data-goto="1" type="button" aria-label="Step 1"></button>
+            <button class="dot" data-goto="2" type="button" aria-label="Step 2"></button>
+            <button class="dot" data-goto="3" type="button" aria-label="Step 3"></button>
+            <button class="dot" data-goto="4" type="button" aria-label="Step 4"></button>
+            <button class="dot" data-goto="5" type="button" aria-label="Step 5"></button>
+        </div>
+        <div class="divider"></div>
+        <div class="nav-buttons">
+            <button class="btn-secondary" id="backBtn" type="button">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back
+            </button>
+            <button class="btn-primary" id="nextBtn" type="button">
+                <span id="nextLabel">Next</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Done state -->
+    <div class="done-state" id="done">
+        <div class="rocket"><i class="fa-solid fa-rocket"></i></div>
+        <h2>You're all set!</h2>
+        <p>You can find these controls anytime around the edges of your screen. Happy co-browsing!</p>
+        <button class="btn-secondary" id="replayBtn" type="button">
+            <i class="fa-solid fa-rotate-left"></i>
+            Show the tour again
+        </button>
+        <a class="studio-link" href="https://webfu.se/studio">
+            or go back to Studio
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </a>
+    </div>
+
+    <script>
+        const TOTAL_STEPS = 5;
+
+        const steps       = document.querySelectorAll('[data-step]');
+        const tourNav     = document.getElementById('tourNav');
+        const done        = document.getElementById('done');
+        const startBtn    = document.getElementById('startBtn');
+        const backBtn     = document.getElementById('backBtn');
+        const nextBtn     = document.getElementById('nextBtn');
+        const nextLabel   = document.getElementById('nextLabel');
+        const skipBtn     = document.getElementById('skipBtn');
+        const replayBtn   = document.getElementById('replayBtn');
+        const stepCurrent = document.getElementById('stepCurrent');
+        const dots        = document.querySelectorAll('.dot');
+
+        let current = 0;        // 0 = welcome, 1-4 = tour steps
+        let furthest = 0;
+
+        function showStep(n) {
+            current = n;
+            furthest = Math.max(furthest, n);
+
+            steps.forEach(el => {
+                el.classList.toggle('active', Number(el.dataset.step) === n);
+            });
+
+            if (n === 0) {
+                tourNav.classList.remove('visible');
+            } else {
+                tourNav.classList.add('visible');
+                stepCurrent.textContent = n;
+                dots.forEach(d => {
+                    const goto = Number(d.dataset.goto);
+                    d.classList.toggle('active',  goto === n);
+                    d.classList.toggle('visited', goto < n || (goto !== n && goto <= furthest));
+                });
+                backBtn.disabled = (n === 1);
+                const isLast = (n === TOTAL_STEPS);
+                nextLabel.textContent = isLast ? 'Finish' : 'Next';
+                nextBtn.querySelector('i').className = isLast
+                    ? 'fa-solid fa-check'
+                    : 'fa-solid fa-arrow-right';
+            }
+        }
+
+        function finish() {
+            steps.forEach(el => el.classList.remove('active'));
+            tourNav.classList.remove('visible');
+            done.classList.add('visible');
+        }
+
+        function restart() {
+            done.classList.remove('visible');
+            furthest = 0;
+            showStep(0);
+        }
+
+        // Copy-to-clipboard for the meeting URL
+        const copyBtn    = document.getElementById('copyBtn');
+        const copyLabel  = document.getElementById('copyLabel');
+        const meetingUrl = document.getElementById('meetingUrl');
+        copyBtn.addEventListener('click', () => {
+            const text = meetingUrl.textContent.trim();
+            const reset = () => {
+                copyBtn.classList.remove('copied');
+                copyBtn.querySelector('i').className = 'fa-solid fa-copy';
+                copyLabel.textContent = 'Copy';
+            };
+            const flash = () => {
+                copyBtn.classList.add('copied');
+                copyBtn.querySelector('i').className = 'fa-solid fa-check';
+                copyLabel.textContent = 'Copied';
+                setTimeout(reset, 1600);
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(flash).catch(() => {});
+            } else {
+                const tmp = document.createElement('textarea');
+                tmp.value = text;
+                document.body.appendChild(tmp);
+                tmp.select();
+                try { document.execCommand('copy'); flash(); } catch (e) {}
+                document.body.removeChild(tmp);
+            }
+        });
+
+        startBtn.addEventListener('click', () => showStep(1));
+        backBtn.addEventListener('click',  () => { if (current > 1) showStep(current - 1); });
+        nextBtn.addEventListener('click',  () => {
+            if (current < TOTAL_STEPS) showStep(current + 1);
+            else finish();
+        });
+        skipBtn.addEventListener('click',   finish);
+        replayBtn.addEventListener('click', restart);
+
+        dots.forEach(d => {
+            d.addEventListener('click', () => showStep(Number(d.dataset.goto)));
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (done.classList.contains('visible')) return;
+            if (current === 0) {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showStep(1); }
+                return;
+            }
+            if (e.key === 'ArrowRight' || e.key === 'Enter') {
+                e.preventDefault();
+                if (current < TOTAL_STEPS) showStep(current + 1);
+                else finish();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (current > 1) showStep(current - 1);
+            } else if (e.key === 'Escape') {
+                finish();
+            }
+        });
+
+        // Kick off on the welcome step
+        showStep(0);
+    </script>
+</body>
+</html>
