@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
     <meta name="theme-color" content="#f9fafb" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#1a1b1c" media="(prefers-color-scheme: dark)">
     <title>Welcome to your meeting space</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -717,30 +717,30 @@
             .step-counter         { min-width: 44px; font-size: 12px; }
         }
 
-        /* ---------- Dark theme (follows OS preference) ---------- */
+        /* ---------- Dark theme (follows OS preference) — base: #1a1b1c ---------- */
         @media (prefers-color-scheme: dark) {
             body {
-                background: #0f172a;
+                background: #1a1b1c;
                 color: #e5e7eb;
             }
 
-            .orb-1 { background: #1e3a8a; opacity: 0.18; }
-            .orb-2 { background: #1e293b; opacity: 0.3;  }
-            .orb-3 { background: #1e3a8a; opacity: 0.15; }
+            .orb-1 { background: #2a3a6e; opacity: 0.12; }
+            .orb-2 { background: #232426; opacity: 0.35; }
+            .orb-3 { background: #2a3a6e; opacity: 0.10; }
 
             .welcome-card,
             .info-card,
             .callout .card,
             .tour-nav {
-                background: #1e293b;
-                border-color: #334155;
-                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+                background: #232426;
+                border-color: #2f3033;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
             }
 
             .welcome-card h1,
             .info-card h2,
             .callout .card h3,
-            .done-state h2 { color: #f8fafc; }
+            .done-state h2 { color: #f3f4f6; }
 
             .welcome-card h1 .accent,
             .callout .card h3 i,
@@ -752,31 +752,30 @@
             .info-card > p,
             .callout .card p,
             .feature p,
-            .launch-copy p,
-            .done-state p { color: #cbd5e1; }
+            .done-state p { color: #c9cbcf; }
 
             .welcome-card p.subtext,
             .step-counter,
             .examples-label,
             .studio-link,
             .btn-link,
-            .launch-input-wrap > i { color: #94a3b8; }
+            .launch-input-wrap > i { color: #9a9ca0; }
 
             .wave-badge,
             .info-badge,
             .done-state .rocket {
-                background: #1e3a8a;
+                background: #1f2b50;
                 color: #a3bbff;
             }
 
             .url-pill {
-                background: #0f172a;
-                border-color: #334155;
+                background: #1a1b1c;
+                border-color: #2f3033;
             }
             .url-pill .url-text { color: #e5e7eb; }
-            .copy-btn { color: #94a3b8; }
-            .copy-btn:hover  { background: #334155; color: #f8fafc; }
-            .copy-btn.copied { background: #1e3a8a; color: #a3bbff; }
+            .copy-btn { color: #9a9ca0; }
+            .copy-btn:hover  { background: #2f3033; color: #f3f4f6; }
+            .copy-btn.copied { background: #1f2b50; color: #a3bbff; }
 
             .cta,
             .btn-primary            { background: #4671d7; }
@@ -784,15 +783,15 @@
             .btn-primary:hover      { background: #7599ff; }
 
             .btn-secondary {
-                background: #1e293b;
+                background: #232426;
                 color: #e5e7eb;
-                border-color: #334155;
+                border-color: #2f3033;
             }
-            .btn-secondary:hover    { background: #273349; border-color: #4671d7; }
-            .btn-link:hover         { color: #f8fafc; }
+            .btn-secondary:hover    { background: #2a2b2e; border-color: #4671d7; }
+            .btn-link:hover         { color: #f3f4f6; }
             .studio-link:hover      { color: #7599ff; }
 
-            .callout .card          { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35); }
+            .callout .card          { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45); }
             .callout:hover .card    {
                 border-color: #4671d7;
                 box-shadow: 0 10px 24px rgba(117, 153, 255, 0.18);
@@ -802,50 +801,50 @@
             .arrow-svg polygon      { stroke: #7599ff; }
             .arrow-svg polygon      { fill: #7599ff; }
 
-            .tour-nav .divider      { background: #334155; }
-            .dot                    { background: #334155; }
+            .tour-nav .divider      { background: #2f3033; }
+            .dot                    { background: #2f3033; }
             .dot:hover              { background: #4671d7; }
             .dot.active             { background: #7599ff; }
             .dot.visited            { background: #4671d7; }
 
             .feature {
-                background: #0f172a;
-                border-color: #273349;
+                background: #1a1b1c;
+                border-color: #2a2b2e;
             }
             .feature:hover {
-                background: #1e293b;
+                background: #232426;
                 border-color: #4671d7;
             }
-            .feature h4             { color: #f8fafc; }
+            .feature h4             { color: #f3f4f6; }
 
             .tag {
-                background: #1e3a8a;
+                background: #1f2b50;
                 color: #a3bbff;
             }
 
             .launch-input-wrap input {
-                background: #0f172a;
-                border-color: #334155;
+                background: #1a1b1c;
+                border-color: #2f3033;
                 color: #e5e7eb;
             }
-            .launch-input-wrap input::placeholder { color: #64748b; }
+            .launch-input-wrap input::placeholder { color: #737478; }
             .launch-input-wrap input:focus {
                 border-color: #7599ff;
                 box-shadow: 0 0 0 3px rgba(117, 153, 255, 0.25);
             }
 
             .dismiss-hint {
-                background: #1e293b;
-                border-color: #334155;
-                color: #cbd5e1;
+                background: #232426;
+                border-color: #2f3033;
+                color: #c9cbcf;
             }
             .seq-icon,
             .seq-label {
-                background: #0f172a;
-                border-color: #334155;
-                color: #f8fafc;
+                background: #1a1b1c;
+                border-color: #2f3033;
+                color: #f3f4f6;
             }
-            .seq-sep { color: #64748b; }
+            .seq-sep { color: #737478; }
         }
     </style>
 </head>
