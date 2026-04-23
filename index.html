@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#f9fafb" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
     <title>Welcome to your meeting space</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -524,10 +527,10 @@
         /* Callout positioning */
         .callout-tl { top: 32px; left: 32px;  flex-direction: column; align-items: flex-start; }
         .callout-tr { top: 32px; right: 32px; flex-direction: column; align-items: flex-end; }
-        /* Tabs callout — arrow tip lands ~100px from the top-left corner */
+        /* Tabs callout — positioned further right of the top-left corner */
         .callout-tc {
             top: 24px;
-            left: 90px;
+            left: 190px;
             flex-direction: column;
             align-items: flex-start;
         }
@@ -535,20 +538,9 @@
         /* Video & Chat sits slightly left of the very top-right corner */
         .callout-tr.tr-offset { right: 180px; }
 
-        /* Direction-specific nudge animations */
-        .callout-tl .arrow-svg,
-        .callout-tc .arrow-svg { animation-name: nudge-tl; }
-        .callout-tr .arrow-svg { animation-name: nudge-tr; }
-        .callout[data-step="5"] .arrow-svg { animation-name: nudge-top; }
+        /* All arrows point up and bob upward */
+        .callout .arrow-svg { animation-name: nudge-top; }
 
-        @keyframes nudge-tl {
-            0%, 100% { transform: translate(0, 0); }
-            50%      { transform: translate(-8px, -8px); }
-        }
-        @keyframes nudge-tr {
-            0%, 100% { transform: translate(0, 0); }
-            50%      { transform: translate(8px, -8px); }
-        }
         @keyframes nudge-top {
             0%, 100% { transform: translate(0, 0); }
             50%      { transform: translate(0, -10px); }
@@ -701,6 +693,130 @@
             .tour-nav .divider    { display: none; }
             .step-counter         { min-width: 44px; font-size: 12px; }
         }
+
+        /* ---------- Dark theme (follows OS preference) ---------- */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #0f172a;
+                color: #e5e7eb;
+            }
+
+            .orb-1 { background: #1e3a8a; opacity: 0.18; }
+            .orb-2 { background: #1e293b; opacity: 0.3;  }
+            .orb-3 { background: #1e3a8a; opacity: 0.15; }
+
+            .welcome-card,
+            .info-card,
+            .callout .card,
+            .tour-nav {
+                background: #1e293b;
+                border-color: #334155;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            }
+
+            .welcome-card h1,
+            .info-card h2,
+            .callout .card h3,
+            .done-state h2 { color: #f8fafc; }
+
+            .welcome-card h1 .accent,
+            .callout .card h3 i,
+            .feature i,
+            .url-pill > i.fa-link,
+            .step-counter .current { color: #7599ff; }
+
+            .welcome-card p,
+            .info-card > p,
+            .callout .card p,
+            .feature p,
+            .launch-copy p,
+            .done-state p { color: #cbd5e1; }
+
+            .welcome-card p.subtext,
+            .step-counter,
+            .examples-label,
+            .studio-link,
+            .btn-link,
+            .launch-input-wrap > i { color: #94a3b8; }
+
+            .wave-badge,
+            .info-badge,
+            .done-state .rocket {
+                background: #1e3a8a;
+                color: #a3bbff;
+            }
+
+            .url-pill {
+                background: #0f172a;
+                border-color: #334155;
+            }
+            .url-pill .url-text { color: #e5e7eb; }
+            .copy-btn { color: #94a3b8; }
+            .copy-btn:hover  { background: #334155; color: #f8fafc; }
+            .copy-btn.copied { background: #1e3a8a; color: #a3bbff; }
+
+            .cta,
+            .btn-primary            { background: #4671d7; }
+            .cta:hover,
+            .btn-primary:hover      { background: #7599ff; }
+
+            .btn-secondary {
+                background: #1e293b;
+                color: #e5e7eb;
+                border-color: #334155;
+            }
+            .btn-secondary:hover    { background: #273349; border-color: #4671d7; }
+            .btn-link:hover         { color: #f8fafc; }
+            .studio-link:hover      { color: #7599ff; }
+
+            .callout .card          { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35); }
+            .callout:hover .card    {
+                border-color: #4671d7;
+                box-shadow: 0 10px 24px rgba(117, 153, 255, 0.18);
+            }
+
+            .arrow-svg path,
+            .arrow-svg polygon      { stroke: #7599ff; }
+            .arrow-svg polygon      { fill: #7599ff; }
+
+            .tour-nav .divider      { background: #334155; }
+            .dot                    { background: #334155; }
+            .dot:hover              { background: #4671d7; }
+            .dot.active             { background: #7599ff; }
+            .dot.visited            { background: #4671d7; }
+
+            .feature {
+                background: #0f172a;
+                border-color: #273349;
+            }
+            .feature:hover {
+                background: #1e293b;
+                border-color: #4671d7;
+            }
+            .feature h4             { color: #f8fafc; }
+
+            .tag {
+                background: #1e3a8a;
+                color: #a3bbff;
+            }
+
+            .launch-form {
+                background: #162348;
+                border-color: #263a6e;
+            }
+            .launch-icon            { background: #4671d7; }
+            .launch-copy h4         { color: #f8fafc; }
+            .launch-input-wrap input {
+                background: #0f172a;
+                border-color: #334155;
+                color: #e5e7eb;
+            }
+            .launch-input-wrap input::placeholder { color: #64748b; }
+            .launch-input-wrap input:focus {
+                border-color: #7599ff;
+                box-shadow: 0 0 0 3px rgba(117, 153, 255, 0.25);
+            }
+        }
     </style>
 </head>
 <body>
@@ -744,11 +860,11 @@
             </button>
         </div>
 
-        <!-- Step 1: Participants (top-left) -->
+        <!-- Step 1: Participants (top-left) — arrow points straight up -->
         <div class="callout callout-tl" data-step="1">
             <svg class="arrow-svg" viewBox="0 0 180 150">
-                <path pathLength="100" d="M 165 138 C 148 128, 138 118, 128 108 C 112 92, 98 76, 84 60 C 68 44, 54 30, 38 20 C 26 13, 18 10, 12 8"/>
-                <polygon points="12,8 32,10 20,28"/>
+                <path pathLength="100" d="M 150 138 C 110 125, 60 100, 28 58 C 20 38, 22 20, 20 10"/>
+                <polygon points="20,8 8,28 32,28"/>
             </svg>
             <div class="card">
                 <h3><i class="fa-solid fa-users"></i> Participants</h3>
@@ -756,11 +872,11 @@
             </div>
         </div>
 
-        <!-- Step 2: Tabs (arrow points up-left to ~100px from the top-left corner) -->
+        <!-- Step 2: Tabs (~100px from the top-left corner) — arrow points straight up -->
         <div class="callout callout-tc" data-step="2">
             <svg class="arrow-svg" viewBox="0 0 180 150">
-                <path pathLength="100" d="M 165 138 C 148 128, 138 118, 128 108 C 112 92, 98 76, 84 60 C 68 44, 54 30, 38 20 C 26 13, 18 10, 12 8"/>
-                <polygon points="12,8 32,10 20,28"/>
+                <path pathLength="100" d="M 150 138 C 110 125, 60 100, 28 58 C 20 38, 22 20, 20 10"/>
+                <polygon points="20,8 8,28 32,28"/>
             </svg>
             <div class="card">
                 <h3><i class="fa-solid fa-plus"></i> Tabs</h3>
@@ -768,11 +884,11 @@
             </div>
         </div>
 
-        <!-- Step 3: Video & Chat (slightly left of the top-right corner) -->
+        <!-- Step 3: Video & Chat (slightly left of top-right corner) — arrow points straight up -->
         <div class="callout callout-tr tr-offset" data-step="3">
             <svg class="arrow-svg" viewBox="0 0 180 150">
-                <path pathLength="100" d="M 15 138 C 32 128, 42 118, 52 108 C 68 92, 82 76, 96 60 C 112 44, 126 30, 142 20 C 154 13, 162 10, 168 8"/>
-                <polygon points="168,8 148,10 160,28"/>
+                <path pathLength="100" d="M 30 138 C 70 125, 120 100, 152 58 C 160 38, 158 20, 160 10"/>
+                <polygon points="160,8 148,28 172,28"/>
             </svg>
             <div class="card">
                 <h3><i class="fa-solid fa-video"></i> Video &amp; Chat</h3>
@@ -780,11 +896,11 @@
             </div>
         </div>
 
-        <!-- Step 4: Settings & Exit (top-right corner) -->
+        <!-- Step 4: Settings & Exit (top-right corner) — arrow points straight up -->
         <div class="callout callout-tr" data-step="4">
             <svg class="arrow-svg" viewBox="0 0 180 150">
-                <path pathLength="100" d="M 15 138 C 32 128, 42 118, 52 108 C 68 92, 82 76, 96 60 C 112 44, 126 30, 142 20 C 154 13, 162 10, 168 8"/>
-                <polygon points="168,8 148,10 160,28"/>
+                <path pathLength="100" d="M 30 138 C 70 125, 120 100, 152 58 C 160 38, 158 20, 160 10"/>
+                <polygon points="160,8 148,28 172,28"/>
             </svg>
             <div class="card">
                 <h3><i class="fa-solid fa-gear"></i> Settings &amp; Exit</h3>
